@@ -47,6 +47,16 @@ public class Main {
 			if(x.compareTo(BigInteger.ONE)==0 || x.compareTo(n.subtract(BigInteger.ONE))==0){
 				return true;
 			}
+			for(BigInteger j= BigInteger.ONE; j.compareTo(r.subtract(BigInteger.ONE))<0;j=j.add(BigInteger.ONE)){
+			x = x.modPow(new BigInteger("2"), n);
+			if(x.equals(BigInteger.ONE)){
+				return false;
+			}
+			if(x.equals(n.subtract(BigInteger.ONE))){
+				return true;
+			}
+		
+			}
 		}
 		
 		return true;
