@@ -1,5 +1,6 @@
 import java.math.BigInteger;
-<<<<<<< HEAD
+import java.util.Random;
+
 
 public class Main {
 
@@ -29,22 +30,11 @@ public class Main {
 		if(n.compareTo(new BigInteger("3")) <= 0){
 			return true; 
 		}
-		
-		return false;
-=======
-import java.util.Random;
-public class Main {
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-		
-	}
-	
-	public boolean rabinMillerTest(BigInteger n){
-		if(n.compareTo(new BigInteger("3"))<0){
-			return true;
-		}
+		// ska bara fortsätta om n < 3. dvs måste 3an inkluderas.
+//		if(n.compareTo(new BigInteger("3"))<0){
+//			return true;
+//		}
 		BigInteger r = BigInteger.ZERO;
 		BigInteger s = n.subtract(BigInteger.ONE);
 		while(s.testBit(1)){
@@ -70,7 +60,6 @@ public class Main {
 		}while(a.compareTo(last)<0 || a.compareTo(first)>0);
 		return a;
 		
->>>>>>> origin/master
 	}
 
 }
