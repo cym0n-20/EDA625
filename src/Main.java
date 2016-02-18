@@ -5,24 +5,24 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String[] primes ={ "1", "3", "3613", "7297", "226673591177742970257407", "2932031007403"};
-		String[] nonPrimes = { "3341", "2932021007403",
-		"226673591177742970257405" };
-		for(String p : primes){
-			if( rabinMillerTest(new BigInteger(p))){
+		String[] primes = { "1", "3", "3613", "7297", "226673591177742970257407", "2932031007403" };
+		String[] nonPrimes = { "3341", "2932021007403", "226673591177742970257405" };
+		for (String p : primes) {
+			if (rabinMillerTest(new BigInteger(p), 512)) {
 				System.out.println("yes");
 			}
 		}
-		for(String p : nonPrimes){
-			if(!rabinMillerTest(new BigInteger(p))){
+		for (String p : nonPrimes) {
+			if (!rabinMillerTest(new BigInteger(p), 512)) {
 				System.out.println("yes no prime");
 			}
 		}
 		
+		System.out.println("complete");
 
 	}
 
-	public static boolean rabinMillerTest(BigInteger n) {
+	public static boolean rabinMillerTest(BigInteger n, int bitlengh) {
 		if (n.compareTo(new BigInteger("3")) < 0) {
 			return true;
 		}
@@ -33,43 +33,32 @@ public class Main {
 			r = r.add(BigInteger.ONE);
 		}
 		for (int i = 0; i < 20; i++) {
-			BigInteger a = getRandomInteger(new BigInteger("2"), n.subtract(BigInteger.ONE));
+			Random rand = new Random();
+			BigInteger a;
+			do {
+				a = new BigInteger(512, rand);
+			} while (a.compareTo(new BigInteger("2")) < 0
+					|| a.compareTo(a.pow(bitlengh).subtract(new BigInteger("2"))) > 0);
 			BigInteger x = a.modPow(s, n);
 			if (x.compareTo(BigInteger.ONE) == 0 || x.compareTo(n.subtract(BigInteger.ONE)) == 0) {
-				continue;
+				return true;
 			}
-			for (BigInteger j = BigInteger.ONE; j.compareTo(r.subtract(BigInteger.ONE)) < 0; j = j
-					.add(BigInteger.ONE)) {
-				
-				System.out.println("hej");
+			BigInteger j = BigInteger.ONE;
+			for (; j.compareTo(r.subtract(BigInteger.ONE)) < 0; j = j.add(BigInteger.ONE)) {
 				x = x.modPow(new BigInteger("2"), n);
 				if (x.equals(BigInteger.ONE)) {
 					return false;
 				}
 				if (x.equals(n.subtract(BigInteger.ONE))) {
-					break;
+					return true;
 				}
-				
-			}
-			if (r == s) {
-				return false;
-			}
 
+			}
+			
 		}
 
-		return true;
+		return false;
 	}
 
-	private static BigInteger getRandomInteger(BigInteger first, BigInteger last) {
-		Random rand = new Random();
-		BigInteger a;
-		do {
-			a = new BigInteger(last.bitLength(), rand);
-		} while (a.compareTo(first) < 0 || a.compareTo(last) > 0);
-		return a;
-
-	}
-	
-	
 
 }
