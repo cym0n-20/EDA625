@@ -38,8 +38,8 @@ public class Main {
 			if (x.compareTo(BigInteger.ONE) == 0 || x.compareTo(n.subtract(BigInteger.ONE)) == 0) {
 				return true;
 			}
-			BigInteger j = BigInteger.ONE;
-			for (; j.compareTo(r.subtract(BigInteger.ONE)) < 0; j = j.add(BigInteger.ONE)) {
+			
+			for (BigInteger j = BigInteger.ONE; j.compareTo(r.subtract(BigInteger.ONE)) < 0; j = j.add(BigInteger.ONE)) {
 				x = x.modPow(BigInteger.valueOf(2), n);
 				if (x.equals(BigInteger.ONE)) {
 					return false;
@@ -63,19 +63,20 @@ public class Main {
 		long start = System.currentTimeMillis();
 		long tot = 0;
 		int nbr = 1;
+		System.out.println("Generation with bitlength: " + bitlength + " started!");
 		while (list.size() < 100) {
 			temp = new BigInteger(bitlength, new Random());
 			temp1 = b.add(temp);
 			if (rabinMillerTest(temp1, bitlength) && !list.contains(temp1)) {
 				list.add(temp1);
 				long time = System.currentTimeMillis() - start;
-				System.out.println("nbr: " + nbr + " time: " + time + "    value: " + temp1);
+				System.out.println("nbr: " + nbr + " time: " + time + " ms    value: " + temp1);
 				nbr++;
 				tot = time;
 			}
 
 		}
-		System.out.println("Test with bitlength: "+ bitlength + " complited!\n Total time: "+ tot + " ms\n");
+		System.out.println("Generation with bitlength: "+ bitlength + " complited!\n Total time: "+ tot + " ms\n");
 
 	}
 	
@@ -129,9 +130,9 @@ public class Main {
 		BigInteger z = c.modPow(d,N);
 		System.out.println("z value is: " + z);
 		if(z.equals(s)){
-			System.out.println("It is correct");
+			System.out.println("It is correct z==s");
 		}else{
-			System.out.println("Incorrect");
+			System.out.println("Incorrect z != s");
 		}
 	}
 }
