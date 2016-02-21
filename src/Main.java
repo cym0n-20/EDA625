@@ -2,9 +2,9 @@ import java.math.BigInteger;
 import java.util.Random;
 
 public class Main {
-
+	
 	// static random to use when a new random BigInteger is generated
-	static Random rand = new Random();
+	private static Random rand = new Random();
 
 	public static void main(String[] args) {
 
@@ -16,10 +16,9 @@ public class Main {
 		System.out.println("----------------------------------ASSIGNMENT 3-5-----------------------------------\n");
 		RSAExponent();
 		System.out.println("Assignment 3-5 complete");
-
 	}
 
-	/*
+	/**
 	 * Static method that is using the Rabin-Miller algorithm to check if the
 	 * BigInteger n is a prime or a composite. Return true if it is probably a
 	 * prime, and false if it is a composite.
@@ -35,24 +34,36 @@ public class Main {
 
 		int r = 0;
 		BigInteger s = n.subtract(BigInteger.ONE);
+		//while s is not odd divide s by two and add one to exponent r as in (2^r * s)
 		while (!s.testBit(0)) {
 			s = s.divide(BigInteger.valueOf(2));
 			r++;
 
 		}
 		for (int i = 0; i < 20; i++) {
+			// Create a new BigInteger and check if it is valid. If not re-roll the number.
 			BigInteger a;
 			do {
 				a = new BigInteger(bitlength, rand);
 			} while (a.compareTo(BigInteger.valueOf(2)) < 0 || a.compareTo(n.subtract(BigInteger.valueOf(2))) > 0);
+			//x = x^s mod n
 			BigInteger x = a.modPow(s, n);
+			
+			// if x = 1 or x = n-1 then it is probably a prime
 			if (x.equals(BigInteger.ONE) || x.equals(n.subtract(BigInteger.ONE))) {
 				return true;
 			}
 
 			for (int j = 1; j < r - 1; j++) {
+				//x = x^2 mod n
 				x = x.modPow(BigInteger.valueOf(2), n);
-
+				
+				/* x = a^(2^j * s)
+				BigInteger two_j_s = BigInteger.valueOf(2).pow(j);
+				two_j_s = two_j_s.multiply(s);
+				x = a.modPow(two_j_s, n);
+				*/
+				
 				if (x.equals(BigInteger.ONE)) {
 					return false;
 				}
@@ -68,7 +79,7 @@ public class Main {
 		return true;
 	}
 
-	/*
+	/**
 	 * A method that is generating 100 primes using the Rabin-Miller test. The
 	 * method checks the time it takes and prints the result in the console
 	 * 
@@ -90,7 +101,8 @@ public class Main {
 
 	}
 
-	/* A method that finds v such that d=gcd(a,m) = a x v mod m, 
+	/**
+	 * A method that finds v such that d=gcd(a,m) = a x v mod m, 
 	 * if d = 1 then v is the inverse of a modulo m.
 	 */
 	private static BigInteger inverseMod(BigInteger m, BigInteger a) {
@@ -107,23 +119,19 @@ public class Main {
 			v2 = t2;
 			d1 = d2;
 			d2 = t3;
-
-		}
-		BigInteger v = v1;
-		BigInteger d = d1;
-
-		if (v.compareTo(BigInteger.ZERO) < 0) {
-			return v.add(m);
-		}
-		if (d.compareTo(BigInteger.ONE) > 0) {
-			return null;
 		}
 
-		return v;
-
+		if (v1.compareTo(BigInteger.ZERO) < 0) {
+			return v1.add(m);
+		}
+		if (d1.compareTo(BigInteger.ONE) < 0) {
+			return v1;
+		}
+		throw new Error();
 	}
 
-	/*A static method that encrypt and decrypt a message and checks if it is correct encrypted and decrypted.
+	/**
+	 * A static method that encrypt and decrypt a message and checks if it is correct encrypted and decrypted.
 	 * 
 	 */
 	private static void RSAExponent() {
@@ -133,7 +141,14 @@ public class Main {
 				"7341551497387753784433514062898919305791812005701318426076740460540616069112545818856877680345369712693892766934354460424979200377180578670689966389908181");
 		BigInteger m = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE).divide(BigInteger.valueOf(2)));
 		BigInteger e = BigInteger.valueOf((long) (Math.pow(2, 16) + 1));
-		BigInteger d = inverseMod(m, e);
+		BigInteger d = BigInteger.ZERO;
+		try{
+			d= inverseMod(m, e);
+		}catch(Error err){
+			System.err.println("InverseMod ERROR");
+		}
+	
+		
 		System.out.println("d value is: " + d);
 		BigInteger N = p.multiply(q);
 		BigInteger s;
@@ -148,7 +163,7 @@ public class Main {
 		if (z.equals(s)) {
 			System.out.println("It is correct z==s");
 		} else {
-			System.out.println("Incorrect z != s");
+			System.err.println("Incorrect z != s");
 		}
 	}
 }
